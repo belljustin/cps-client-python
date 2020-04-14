@@ -1,5 +1,5 @@
 import requests
-import jsonpickle
+import json
 import uuid
 
 
@@ -57,7 +57,7 @@ class Transfer:
                 json_["transactionHash"])
 
     def __str__(self):
-        return jsonpickle.encode(self, unpicklable=False)
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 class CreateTransferRequest:
     def __init__(self, source, destination, amount):
@@ -94,7 +94,7 @@ class Client:
 
         res = requests.post(
                 resource,
-                data = jsonpickle.encode(req),
+                data = json.dumps(req, default=lambda o: o.__dict__),
                 headers = self.default_headers())
 
         if (res.status_code >= requests.codes.internal_server_error):
