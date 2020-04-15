@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master, develop ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -27,5 +27,7 @@ jobs:
       run: |
         make dev
     - name: Run tests
+      env:
+        CPS_API_KEY: ${{ secrets.CPS_API_KEY }}
       run: |
         make integration
