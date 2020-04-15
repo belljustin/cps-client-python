@@ -29,6 +29,7 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  create-blockchain-transfer  Create transfers from a wallet to blockchain...
-  get-transfer                Get info about transfers.
+  configuration-get           Get global CPS configuration
+  transfer-create-blockchain  Create transfers from a wallet to blockchain...
+  transfer-get                Get info about transfers.
 ```
