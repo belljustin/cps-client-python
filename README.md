@@ -1,5 +1,7 @@
 # Circle Platform Services - Python Client
 
+[![PyPI version](https://badge.fury.io/py/cps-client.svg)](https://badge.fury.io/py/cps-client)
+
 ## WARNING: work in progress and subject to change
 
 A python client and CLI for working with Circle Platform Services.
