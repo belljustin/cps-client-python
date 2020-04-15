@@ -3,7 +3,8 @@ class Configuration:
         self.payments = payments
 
     def from_json(json_):
-        return Configuration(PaymentsConfiguration(json_['payments']))
+        paymentsConfig = PaymentsConfiguration.from_json(json_['payments'])
+        return Configuration(paymentsConfig)
 
 class PaymentsConfiguration:
     def __init__(self, masterWalletId):
