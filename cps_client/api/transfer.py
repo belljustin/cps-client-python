@@ -57,7 +57,10 @@ class Transfer:
                 Location.from_json(json_["destination"]),
                 Money.from_json(json_["amount"]),
                 json_["status"],
-                json_["transactionHash"])
+                json_.get("transactionHash"))
 
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+
+    def __repr__(self):
+        return self.__str__()

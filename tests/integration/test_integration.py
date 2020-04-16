@@ -41,3 +41,24 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(retrievedTransfer.amount.amount, amount.amount)
         self.assertEqual(retrievedTransfer.amount.currency, amount.currency)
         self.assertIsNotNone(transfer.status)
+
+    def test_get_transfers(self):
+
+        # it's assumed that some transfers exist
+        transfers = self.client.get_transfers()
+
+        self.assertIsNotNone(transfers)
+
+        transferParams = api.PaginationParams(pageSize=1)
+        transfers = self.client.get_transfers(transferParams.get_params())
+
+        self.assertIsNotNone(transfers)
+        self.assertEqual(len(transfers), 1)
+
+        lastTransfer = transfers[-1]
+        transferParams = api.PaginationParams(pageSize=1, pageAfter=lastTransfer.id)
+        transfers = self.client.get_transfers(transferParams.get_params())
+
+        self.assertIsNotNone(transfers)
+        self.assertEqual(len(transfers), 1)
+        self.assertNotEqual(transfers[0].id, lastTransfer.id)

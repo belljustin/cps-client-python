@@ -22,6 +22,20 @@ class CreateTransferRequest:
         self.destination = destination
         self.amount = amount
 
+class PaginationParams:
+    def __init__(self, pageSize=50, pageBefore=None, pageAfter=None):
+        if pageBefore is not None and pageAfter is not None:
+            raise ValueError("cannot specify both pageBefore and pageAfter for PaginationParams")
+
+        self.params = {
+            "pageSize": pageSize,
+            "pageBefore": pageBefore,
+            "pageAfter": pageAfter
+        }
+
+    def get_params(self):
+        return self.params
+
 class Client:
     def __init__(self, host, creds, version="v1"):
         self.host = host
@@ -62,6 +76,17 @@ class Client:
         Client.__check_status_code(res)
 
         return Transfer.from_json(res.json()["data"])
+
+    def get_transfers(self, params=None):
+        resource = "/".join([self.host, self.version, "transfers"])
+
+        res = requests.get(
+                resource,
+                headers = self._default_headers(),
+                params = params)
+        Client.__check_status_code(res)
+
+        return [Transfer.from_json(t) for t in res.json()["data"]]
 
     def get_configuration(self):
         resource = "/".join([self.host, self.version, "configuration"])
