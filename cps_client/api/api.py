@@ -1,6 +1,8 @@
-import requests
 import json
 import uuid
+import re
+
+import requests
 
 from .transfer import Transfer
 from .configuration import Configuration
@@ -32,6 +34,37 @@ class PaginationParams:
             "pageBefore": pageBefore,
             "pageAfter": pageAfter
         }
+
+    def get_params(self):
+        return self.params
+
+class DateTimeParams:
+    regex = r'^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$'
+    match_iso8601 = re.compile(regex).match
+
+    def __init__(self, from_=None, to=None):
+        if from_ is not None:
+            DateTimeParams.match_iso8601(from_)
+
+        if to is not None:
+            DateTimeParams.match_iso8601(to)
+
+        self.params = {
+            "from": from_,
+            "to": to,
+        }
+
+    def get_params(self):
+        return self.params
+
+class TransferParams:
+    def __init__(self, sourceWalletId, destinationWalletId, *moreParams):
+        self.params = {
+            "sourceWalletId": sourceWalletId,
+            "destinationWalletId": destinationWalletId
+        }
+        for p in moreParams:
+            self.params = { **self.params, **p.get_params() }
 
     def get_params(self):
         return self.params

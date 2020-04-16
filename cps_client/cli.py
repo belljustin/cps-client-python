@@ -47,13 +47,19 @@ def transfer_get(id):
     print(transfer)
 
 @click.command()
+@click.option('--sourceWalletId', default=None, help='The source wallet id of a transfer.')
+@click.option('--destinationWalletId', default=None, help='The destination wallet id of a transfer.')
+@click.option('--from', 'from_', default=None, help='Items created since the specified date-time (inclusive). Must be ISO-8691 formatted')
+@click.option('--to', default=None, help='Items created before the specified date-time (inclusive). Must be ISO-8601 formatted.')
 @click.option('--pageSize', default=50, help='The number of items to fetch per page.')
-def transfers_get(pagesize):
+def transfers_get(sourcewalletid, destinationwalletid, from_, to, pagesize):
     """Get collection of transfers."""
 
     c = getClient()
 
-    params = api.PaginationParams(pageSize=pagesize)
+    paginationParams = api.PaginationParams(pageSize=pagesize)
+    datetimeParams = api.DateTimeParams(from_, to)
+    params = api.TransferParams(sourcewalletid, destinationwalletid, datetimeParams)
     transfers = c.get_transfers(params.get_params())
 
     while len(transfers) > 0:
