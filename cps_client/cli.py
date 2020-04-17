@@ -37,6 +37,34 @@ def wallet_address_create(walletid, currency, chain):
 
 @click.command()
 @click.argument('walletid')
+@click.option('--from', 'from_', default=None, help='Items created since the specified date-time (inclusive). Must be ISO-8691 formatted')
+@click.option('--to', default=None, help='Items created before the specified date-time (inclusive). Must be ISO-8601 formatted.')
+@click.option('--pageSize', default=50, help='The number of items to fetch per page.')
+def wallet_addresses_get(walletid, from_, to, pagesize):
+    """Get a collection of wallet addresses.
+
+    WALLETID identifier of the wallet to get associated addresses.
+    """
+
+    c = getClient()
+
+    paginationParams = api.PaginationParams(pageSize=pagesize)
+    datetimeParams = api.DateTimeParams(from_, to)
+    params = api.AddressesParams(paginationParams, datetimeParams)
+    addresses = c.get_wallet_addresses(walletid, params.get_params())
+
+    while len(addresses) > 0:
+        print(addresses)
+
+        i = input("n(ext) / q(uit): ")
+        if (i == "n" or i == "next"):
+            params = api.PaginationParams(pageSize=pagesize, pageAfter=addresses[-1].address)
+            addresses = c.get_wallet_addresses(walletid, params.get_params())
+        else:
+            return
+
+@click.command()
+@click.argument('walletid')
 @click.argument('address')
 @click.argument('amount')
 @click.option('--chain', default='ETH', help='The destination chain. Defaults to ETH.')
@@ -114,6 +142,7 @@ def getClient():
 def run():
     cli.add_command(wallet_create)
     cli.add_command(wallet_address_create)
+    cli.add_command(wallet_addresses_get)
     cli.add_command(transfer_create_blockchain)
     cli.add_command(transfer_get)
     cli.add_command(transfers_get)

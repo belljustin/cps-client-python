@@ -117,6 +117,17 @@ class Client:
 
         return Address.from_json(res.json()["data"])
 
+    def get_wallet_addresses(self, walletId, params=None):
+        resource = "/".join([self.host, self.version, "wallets", walletId, "addresses"])
+
+        res = requests.get(
+                resource,
+                headers = self._default_headers(),
+                params = params)
+        Client.__check_status_code(res)
+
+        return [Address.from_json(a) for a in res.json()["data"]]
+
     """ transfers """
 
     def create_transfer(self, source, destination, amount):

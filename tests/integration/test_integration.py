@@ -101,3 +101,16 @@ class TestBasic(unittest.TestCase):
         self.assertIsNotNone(address.address)
         self.assertEqual(address.currency, "USD")
         self.assertEqual(address.chain, "ETH")
+
+    def test_get_wallet_addresses(self):
+
+        wallet = self.client.create_wallet()
+        self.assertIsNotNone(wallet.walletId)
+
+        n = 2
+        addresses = [self.client.create_wallet_address(wallet.walletId, "USD", "ETH") for _ in range(n)]
+        addresses.reverse() # reverse because retrieve list will be in reverse chronological order
+        retreivedAddresses = self.client.get_wallet_addresses(wallet.walletId)
+
+        for i in range(n):
+            self.assertEqual(addresses[i].address, retreivedAddresses[i].address)

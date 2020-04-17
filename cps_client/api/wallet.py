@@ -41,3 +41,12 @@ class CreateAddressRequest:
         self.idempotencyKey = str(uuid.uuid4())
         self.currency = currency
         self.chain = chain
+
+class AddressesParams:
+    def __init__(self, *moreParams):
+        self.params = dict()
+        for p in moreParams:
+            self.params = { **self.params, **p.get_params() }
+
+    def get_params(self):
+        return self.params

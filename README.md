@@ -104,10 +104,16 @@ To test, you'll need a CPS API key.
 You can get this by signing up for the sandbox here: https://my-sandbox.circle.com/.
 To run the cli and integration tests, this needs to exist as an environment variable named `$CPS_API_KEY`
 
-You can then run the integration tests via the make file:
+You can then run all the integration tests via the make file:
 
 ```
 make integration
+```
+
+or run individual tests with the python unittest command, e.g:
+
+```sh
+python -m unittest tests.integration.test_integration.TestBasic.test_get_wallet_addresses
 ```
 
 To submit a contribution, open a pull request against the master branch on upstream.
