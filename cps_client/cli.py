@@ -84,8 +84,9 @@ def transfers_get(sourcewalletid, destinationwalletid, from_, to, pagesize):
 @click.command()
 def configuration_get():
     """Get global CPS configuration"""
+
     c = getClient()
-    config = c.get_configuration(id)
+    config = c.get_configuration()
     
     print(config)
 
