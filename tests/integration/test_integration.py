@@ -42,6 +42,29 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(retrievedTransfer.amount.currency, amount.currency)
         self.assertIsNotNone(transfer.status)
 
+    def test_create_wallet_transfer(self):
+
+        # it's assumed the master wallet is pre-funded with amounts sufficient to run these tests
+        config = self.client.get_configuration()
+        self.assertIsNotNone(config.payments.masterWalletId)
+
+        dest_wallet = self.client.create_wallet()
+        self.assertIsNotNone(dest_wallet.walletId)
+
+        source = api.WalletLocation(config.payments.masterWalletId)
+        destination = api.WalletLocation(dest_wallet.walletId)
+        amount = api.Money("0.01", "USD")
+
+        transfer = self.client.create_transfer(source, destination, amount)
+
+        self.assertIsNotNone(transfer.id)
+        self.assertEqual(transfer.source.id, source.id)
+        self.assertEqual(transfer.destination.id, destination.id)
+        self.assertEqual(transfer.amount.amount, amount.amount)
+        self.assertEqual(transfer.amount.currency, amount.currency)
+        self.assertIsNotNone(transfer.status)
+
+
     def test_get_transfers(self):
 
         # it's assumed that some transfers exist
