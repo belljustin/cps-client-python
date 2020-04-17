@@ -79,3 +79,35 @@ Output:
 }
 """
 ```
+
+## Development
+
+Fork this repo and do the following to get setup:
+
+```sh
+# clone the repository and add upstream so you can fetch the latest changes
+git clone git@github.com:<your-username>/cps-client-python.git
+git remote add upstream git@github.com:belljustin/cps-client-python.git
+
+# create a virtualenv
+cd cps-client-python
+virtualenv -p python3 venv
+source venv/bin/activate
+
+# install the project in editable mode
+pip install -e .
+```
+
+Now, as long as you're using the virtualenv, you can use cps-client with all the edits you've made including running the cli tool.
+
+To test, you'll need a CPS API key.
+You can get this by signing up for the sandbox here: https://my-sandbox.circle.com/.
+To run the cli and integration tests, this needs to exist as an environment variable named `$CPS_API_KEY`
+
+You can then run the integration tests via the make file:
+
+```
+make integration
+```
+
+To submit a contribution, open a pull request against the master branch on upstream.
