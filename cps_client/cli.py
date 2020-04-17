@@ -12,6 +12,15 @@ def cli():
     pass
 
 @click.command()
+def wallet_create():
+    """Create a new wallet."""
+
+    c = getClient()
+    wallet = c.create_wallet()
+
+    print(wallet)
+
+@click.command()
 @click.argument('walletid')
 @click.argument('address')
 @click.argument('amount')
@@ -87,6 +96,7 @@ def getClient():
 
 
 def run():
+    cli.add_command(wallet_create)
     cli.add_command(transfer_create_blockchain)
     cli.add_command(transfer_get)
     cli.add_command(transfers_get)

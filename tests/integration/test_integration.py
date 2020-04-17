@@ -62,3 +62,9 @@ class TestBasic(unittest.TestCase):
         self.assertIsNotNone(transfers)
         self.assertEqual(len(transfers), 1)
         self.assertNotEqual(transfers[0].id, lastTransfer.id)
+
+    def test_create_wallet(self):
+
+        wallet = self.client.create_wallet()
+
+        self.assertIsNotNone(wallet.walletId)

@@ -4,6 +4,7 @@ import re
 
 import requests
 
+from .wallet import Wallet, Address, CreateWalletRequest, CreateAddressRequest
 from .transfer import Transfer
 from .configuration import Configuration
 
@@ -88,6 +89,22 @@ class Client:
         elif (res.status_code >= requests.codes.bad_request):
             raise ClientException(res.status_code)
 
+    """ wallets """
+
+    def create_wallet(self):
+        req = CreateWalletRequest()
+        resource = "/".join([self.host, self.version, "wallets"])
+
+        res = requests.post(
+                resource,
+                data = json.dumps(req, default=lambda o: o.__dict__),
+                headers = self._default_headers())
+        Client.__check_status_code(res)
+
+        return Wallet.from_json(res.json()["data"])
+
+    """ transfers """
+
     def create_transfer(self, source, destination, amount):
         req = CreateTransferRequest(source, destination, amount)
         resource = "/".join([self.host, self.version, "transfers"])
@@ -120,6 +137,8 @@ class Client:
         Client.__check_status_code(res)
 
         return [Transfer.from_json(t) for t in res.json()["data"]]
+
+    """ configuration """
 
     def get_configuration(self):
         resource = "/".join([self.host, self.version, "configuration"])
