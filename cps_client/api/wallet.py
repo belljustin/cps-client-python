@@ -30,6 +30,12 @@ class Address:
     def from_json(json_):
         return Address(json_["address"], json_["currency"], json_["chain"])
 
+    def __str__(self):
+        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
+
+    def __repr__(self):
+        return self.__str__()
+
 class CreateAddressRequest:
     def __init__(self, currency, chain):
         self.idempotencyKey = str(uuid.uuid4())

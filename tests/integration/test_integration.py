@@ -91,3 +91,13 @@ class TestBasic(unittest.TestCase):
         wallet = self.client.create_wallet()
 
         self.assertIsNotNone(wallet.walletId)
+
+    def test_create_address(self):
+
+        wallet = self.client.create_wallet()
+        self.assertIsNotNone(wallet.walletId)
+
+        address = self.client.create_wallet_address(wallet.walletId, "USD", "ETH")
+        self.assertIsNotNone(address.address)
+        self.assertEqual(address.currency, "USD")
+        self.assertEqual(address.chain, "ETH")

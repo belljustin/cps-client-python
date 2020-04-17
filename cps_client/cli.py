@@ -22,6 +22,21 @@ def wallet_create():
 
 @click.command()
 @click.argument('walletid')
+@click.option('--currency', default='USD', help='the receivable currency of the generated address.')
+@click.option('--chain', default='ETH', help='the blockchain on which the address will be generated.')
+def wallet_address_create(walletid, currency, chain):
+    """Create a new wallet address.
+
+    WALLETID identifier of the wallet with which the created address will be associated.
+    """
+
+    c = getClient()
+    address = c.create_wallet_address(walletid, currency, chain)
+
+    print(address)
+
+@click.command()
+@click.argument('walletid')
 @click.argument('address')
 @click.argument('amount')
 @click.option('--chain', default='ETH', help='The destination chain. Defaults to ETH.')
@@ -98,6 +113,7 @@ def getClient():
 
 def run():
     cli.add_command(wallet_create)
+    cli.add_command(wallet_address_create)
     cli.add_command(transfer_create_blockchain)
     cli.add_command(transfer_get)
     cli.add_command(transfers_get)
