@@ -35,6 +35,9 @@ Commands:
   transfer-create-blockchain  Create transfers from a wallet to blockchain...
   transfer-get                Get info about transfers.
   transfers-get               Get collection of transfers.
+  wallet-address-create       Create a new wallet address.
+  wallet-addresses-get        Get a collection of wallet addresses.
+  wallet-create               Create a new wallet.
 ```
 
 ### Library
