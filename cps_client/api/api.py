@@ -59,13 +59,11 @@ class DateTimeParams:
         return self.params
 
 class TransferParams:
-    def __init__(self, sourceWalletId, destinationWalletId, *moreParams):
+    def __init__(self, sourceWalletId, destinationWalletId):
         self.params = {
             "sourceWalletId": sourceWalletId,
             "destinationWalletId": destinationWalletId
         }
-        for p in moreParams:
-            self.params = { **self.params, **p.get_params() }
 
     def get_params(self):
         return self.params
@@ -117,13 +115,17 @@ class Client:
 
         return Address.from_json(res.json()["data"])
 
-    def get_wallet_addresses(self, walletId, params=None):
+    def get_wallet_addresses(self, walletId, *params):
         resource = "/".join([self.host, self.version, "wallets", walletId, "addresses"])
+
+        qparams = dict()
+        for p in params:
+            qparams = { **qparams, **p.get_params() }
 
         res = requests.get(
                 resource,
                 headers = self._default_headers(),
-                params = params)
+                params = qparams)
         Client.__check_status_code(res)
 
         return [Address.from_json(a) for a in res.json()["data"]]
@@ -152,13 +154,17 @@ class Client:
 
         return Transfer.from_json(res.json()["data"])
 
-    def get_transfers(self, params=None):
+    def get_transfers(self, *params):
         resource = "/".join([self.host, self.version, "transfers"])
+
+        qparams = dict()
+        for p in params:
+            qparams = { **qparams, **p.get_params() }
 
         res = requests.get(
                 resource,
                 headers = self._default_headers(),
-                params = params)
+                params = qparams)
         Client.__check_status_code(res)
 
         return [Transfer.from_json(t) for t in res.json()["data"]]

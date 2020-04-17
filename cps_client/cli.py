@@ -50,18 +50,19 @@ def wallet_addresses_get(walletid, from_, to, pagesize):
 
     paginationParams = api.PaginationParams(pageSize=pagesize)
     datetimeParams = api.DateTimeParams(from_, to)
-    params = api.AddressesParams(paginationParams, datetimeParams)
-    addresses = c.get_wallet_addresses(walletid, params.get_params())
+
+    addresses = c.get_wallet_addresses(walletid, paginationParams, datetimeParams)
 
     while len(addresses) > 0:
         print(addresses)
 
         i = input("n(ext) / q(uit): ")
         if (i == "n" or i == "next"):
-            params = api.PaginationParams(pageSize=pagesize, pageAfter=addresses[-1].address)
-            addresses = c.get_wallet_addresses(walletid, params.get_params())
+            paginationParams = api.PaginationParams(pageSize=pagesize, pageAfter=addresses[-1].address)
+            addresses = c.get_wallet_addresses(walletid, paginationParams, datetimeParams)
         else:
             return
+
 
 @click.command()
 @click.argument('walletid')
@@ -111,8 +112,8 @@ def transfers_get(sourcewalletid, destinationwalletid, from_, to, pagesize):
 
     paginationParams = api.PaginationParams(pageSize=pagesize)
     datetimeParams = api.DateTimeParams(from_, to)
-    params = api.TransferParams(sourcewalletid, destinationwalletid, datetimeParams)
-    transfers = c.get_transfers(params.get_params())
+    transferParams = api.TransferParams(sourcewalletid, destinationwalletid)
+    transfers = c.get_transfers(paginationParams, datetimeParams, transferParams)
 
     while len(transfers) > 0:
         print(transfers)
@@ -120,7 +121,7 @@ def transfers_get(sourcewalletid, destinationwalletid, from_, to, pagesize):
         i = input("n(ext) / q(uit): ")
         if (i == "n" or i == "next"):
             params = api.PaginationParams(pageSize=pagesize, pageAfter=transfers[-1].id)
-            transfers = c.get_transfers(params.get_params())
+            transfers = c.get_transfers(params)
         else:
             return
 
@@ -132,6 +133,19 @@ def configuration_get():
     config = c.get_configuration()
     
     print(config)
+
+def interactivePage(supplier, paginator):
+    items = supplier()
+
+    while len(items) > 0:
+        print(items)
+
+        i = input("n(ext) / q(uit): ")
+        if (i == "n" or i == "next"):
+            paginationParams = paginator(items)
+            items = supplier(params)
+        else:
+            return
 
 
 def getClient():
