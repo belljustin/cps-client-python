@@ -33,6 +33,7 @@ Options:
 Commands:
   configuration-get           Get global CPS configuration
   transfer-create-blockchain  Create transfers from a wallet to blockchain...
+  transfer-create-wallet      Create transfers from a wallet to another...
   transfer-get                Get info about transfers.
   transfers-get               Get collection of transfers.
   wallet-address-create       Create a new wallet address.

@@ -88,6 +88,28 @@ def transfer_create_blockchain(walletid, address, amount, currency, chain):
     print(transfer)
 
 @click.command()
+@click.argument('sourcewalletid')
+@click.argument('destwalletid')
+@click.argument('amount')
+@click.option('--currency', default='USD', help='the amount currency to transfer. Defaults to USD.')
+def transfer_create_wallet(sourcewalletid, destwalletid, amount, currency):
+    """Create transfers from a wallet to another wallet.
+
+    SOURCEWALLETID the source wallet id.\n
+    DESTWALLETID the destination wallet id.\n
+    AMOUNT the value to send.
+    """
+
+    source = api.WalletLocation(sourcewalletid)
+    destination = api.WalletLocation(destwalletid)
+    amount = api.Money(amount, currency)
+
+    c = getClient()
+    transfer = c.create_transfer(source, destination, amount)
+
+    print(transfer)
+
+@click.command()
 @click.argument('id')
 def transfer_get(id):
     """Get info about transfers.
@@ -158,6 +180,7 @@ def run():
     cli.add_command(wallet_address_create)
     cli.add_command(wallet_addresses_get)
     cli.add_command(transfer_create_blockchain)
+    cli.add_command(transfer_create_wallet)
     cli.add_command(transfer_get)
     cli.add_command(transfers_get)
     cli.add_command(configuration_get)
