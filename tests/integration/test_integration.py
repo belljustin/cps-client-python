@@ -93,6 +93,9 @@ class TestBasic(unittest.TestCase):
 
         self.assertIsNotNone(wallet.walletId)
 
+        wallet = self.client.get_wallet(wallet.walletId)
+        self.assertIsNotNone(wallet.walletId)
+
     def test_create_address(self):
 
         wallet = self.client.create_wallet()

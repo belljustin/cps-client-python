@@ -101,6 +101,16 @@ class Client:
 
         return Wallet.from_json(res.json()["data"])
 
+    def get_wallet(self, walletId):
+        resource = "/".join([self.host, self.version, "wallets", walletId])
+
+        res = requests.get(
+                resource,
+                headers = self._default_headers())
+        Client.__check_status_code(res)
+
+        return Wallet.from_json(res.json()["data"])
+
     """ addresses """
 
     def create_wallet_address(self, walletId, currency, chain):

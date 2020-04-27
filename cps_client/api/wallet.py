@@ -1,14 +1,18 @@
 import json
 import uuid
 
+from .transfer import Money
+
 
 class Wallet:
-    def __init__(self, walletId):
+    def __init__(self, walletId, balances):
         self.walletId = walletId
+        self.balances = balances
 
     @staticmethod
     def from_json(json_):
-        return Wallet(json_["walletId"])
+        balances = [Money.from_json(m) for m in json_["balances"]]
+        return Wallet(json_["walletId"], balances)
 
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
