@@ -59,6 +59,9 @@ class Transfer:
                 json_["status"],
                 json_.get("transactionHash"))
 
+    def page_after(self):
+        return self.id
+
     def __str__(self):
         return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 

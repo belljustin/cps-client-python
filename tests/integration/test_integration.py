@@ -79,13 +79,12 @@ class TestBasic(unittest.TestCase):
         self.assertIsNotNone(transfers)
         self.assertEqual(len(transfers), 1)
 
-        lastTransfer = transfers[-1]
-        paginationParams = api.PaginationParams(pageSize=1, pageAfter=lastTransfer.id)
-        transfers = self.client.get_transfers(paginationParams)
+        paginationParams.set_page_after(api.Transfer.page_after(transfers))
+        nextTransfers = self.client.get_transfers(paginationParams)
 
-        self.assertIsNotNone(transfers)
-        self.assertEqual(len(transfers), 1)
-        self.assertNotEqual(transfers[0].id, lastTransfer.id)
+        self.assertIsNotNone(nextTransfers)
+        self.assertEqual(len(nextTransfers), 1)
+        self.assertNotEqual(nextTransfers, transfers)
 
     def test_create_wallet(self):
 

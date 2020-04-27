@@ -36,6 +36,14 @@ class PaginationParams:
             "pageAfter": pageAfter
         }
 
+    def set_page_after(self, pageAfter):
+        self.params["pageBefore"] = None
+        self.params["pageAfter"] = pageAfter
+
+    def set_page_before(self, pageBefore):
+        self.params["pageAfter"] = None
+        self.params["pageBefore"] = pageBefore
+
     def get_params(self):
         return self.params
 

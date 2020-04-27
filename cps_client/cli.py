@@ -64,18 +64,7 @@ def wallet_addresses_get(walletid, from_, to, pagesize):
     paginationParams = api.PaginationParams(pageSize=pagesize)
     datetimeParams = api.DateTimeParams(from_, to)
 
-    addresses = c.get_wallet_addresses(walletid, paginationParams, datetimeParams)
-
-    while len(addresses) > 0:
-        print(addresses)
-
-        i = input("n(ext) / q(uit): ")
-        if (i == "n" or i == "next"):
-            paginationParams = api.PaginationParams(pageSize=pagesize, pageAfter=addresses[-1].address)
-            addresses = c.get_wallet_addresses(walletid, paginationParams, datetimeParams)
-        else:
-            return
-
+    paginate(lambda paginateParams: c.get_wallet_addresses(walletid, paginateParams, datetimeParams), paginationParams)
 
 @click.command()
 @click.argument('walletid')
@@ -148,17 +137,8 @@ def transfers_get(sourcewalletid, destinationwalletid, from_, to, pagesize):
     paginationParams = api.PaginationParams(pageSize=pagesize)
     datetimeParams = api.DateTimeParams(from_, to)
     transferParams = api.TransferParams(sourcewalletid, destinationwalletid)
-    transfers = c.get_transfers(paginationParams, datetimeParams, transferParams)
 
-    while len(transfers) > 0:
-        print(transfers)
-
-        i = input("n(ext) / q(uit): ")
-        if (i == "n" or i == "next"):
-            params = api.PaginationParams(pageSize=pagesize, pageAfter=transfers[-1].id)
-            transfers = c.get_transfers(params)
-        else:
-            return
+    paginate(lambda paginateParams: c.get_transfers(paginateParams, datetimeParams, transferParams), paginationParams)
 
 @click.command()
 def configuration_get():
@@ -169,24 +149,22 @@ def configuration_get():
     
     print(config)
 
-def interactivePage(supplier, paginator):
-    items = supplier()
-
-    while len(items) > 0:
-        print(items)
-
-        i = input("n(ext) / q(uit): ")
-        if (i == "n" or i == "next"):
-            paginationParams = paginator(items)
-            items = supplier(params)
-        else:
-            return
-
-
 def getClient():
     API_BASE_URL = os.environ.get('CPS_API_BASE_URL', 'https://api-sandbox.circle.com')
     API_KEY = os.environ['CPS_API_KEY']
     return api.Client(API_BASE_URL, API_KEY)
+
+def paginate(supplier, paginationParams):
+    results = supplier(paginationParams)
+    while len(results) > 0:
+        print(results)
+
+        i = input('n(next) / q(quit): ')
+        if (i == 'n' or i == 'next'):
+            paginationParams.set_page_after(results[-1].page_after())
+            results = supplier(paginationParams)
+        else:
+            return
 
 
 def run():
