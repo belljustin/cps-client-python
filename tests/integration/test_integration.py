@@ -6,8 +6,9 @@ from cps_client import api
 
 class TestBasic(unittest.TestCase):
     def setUp(self):
+        API_BASE_URL = os.environ.get('CPS_API_BASE_URL', 'https://api-sandbox.circle.com')
         API_KEY = os.environ['CPS_API_KEY']
-        self.client = api.Client("https://api-sandbox.circle.com", API_KEY)
+        self.client = api.Client(API_BASE_URL, API_KEY)
 
     def test_get_configuration(self):
         config = self.client.get_configuration()

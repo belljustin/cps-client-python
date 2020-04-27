@@ -171,8 +171,9 @@ def interactivePage(supplier, paginator):
 
 
 def getClient():
+    API_BASE_URL = os.environ.get('CPS_API_BASE_URL', 'https://api-sandbox.circle.com')
     API_KEY = os.environ['CPS_API_KEY']
-    return api.Client("https://api-sandbox.circle.com", API_KEY)
+    return api.Client(API_BASE_URL, API_KEY)
 
 
 def run():
