@@ -39,6 +39,8 @@ Commands:
   wallet-address-create       Create a new wallet address.
   wallet-addresses-get        Get a collection of wallet addresses.
   wallet-create               Create a new wallet.
+  wallet-get                  Get a wallet.
+  wallets-get                 Get a collection of wallets.
 ```
 
 ### Library

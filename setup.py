@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='cps_client',
-    version='0.1.9',
+    version='0.1.10',
     packages=find_packages(),
 
     description='A Circle Platform Services Python Client',
