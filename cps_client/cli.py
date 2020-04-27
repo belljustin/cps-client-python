@@ -34,6 +34,20 @@ def wallet_get(walletid):
     print(wallet)
 
 @click.command()
+@click.option('--from', 'from_', default=None, help='Items created since the specified date-time (inclusive). Must be ISO-8691 formatted')
+@click.option('--to', default=None, help='Items created before the specified date-time (inclusive). Must be ISO-8601 formatted.')
+@click.option('--pageSize', default=50, help='The number of items to fetch per page.')
+def wallets_get(from_, to, pagesize):
+    """Get a collection of wallets."""
+
+    c = getClient()
+
+    paginationParams = api.PaginationParams(pageSize=pagesize)
+    datetimeParams = api.DateTimeParams(from_, to)
+
+    paginate(lambda paginateParams: c.get_wallets(paginateParams, datetimeParams), paginationParams)
+
+@click.command()
 @click.argument('walletid')
 @click.option('--currency', default='USD', help='the receivable currency of the generated address.')
 @click.option('--chain', default='ETH', help='the blockchain on which the address will be generated.')
@@ -170,6 +184,7 @@ def paginate(supplier, paginationParams):
 def run():
     cli.add_command(wallet_create)
     cli.add_command(wallet_get)
+    cli.add_command(wallets_get)
     cli.add_command(wallet_address_create)
     cli.add_command(wallet_addresses_get)
     cli.add_command(transfer_create_blockchain)

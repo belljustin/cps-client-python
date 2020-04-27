@@ -119,6 +119,21 @@ class Client:
 
         return Wallet.from_json(res.json()["data"])
 
+    def get_wallets(self, *params):
+        resource = "/".join([self.host, self.version, "wallets"])
+
+        qparams = dict()
+        for p in params:
+            qparams = { **qparams, **p.get_params() }
+
+        res = requests.get(
+                resource,
+                headers = self._default_headers(),
+                params = qparams)
+        Client.__check_status_code(res)
+
+        return [Wallet.from_json(w) for w in res.json()["data"]]
+
     """ addresses """
 
     def create_wallet_address(self, walletId, currency, chain):
