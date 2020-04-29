@@ -156,12 +156,47 @@ def transfers_get(sourcewalletid, destinationwalletid, from_, to, pagesize):
 
 @click.command()
 def configuration_get():
-    """Get global CPS configuration"""
+    """Get global CPS configuration."""
 
     c = getClient()
     config = c.get_configuration()
     
     print(config)
+
+@click.command()
+@click.argument("endpoint")
+def subscription_create(endpoint):
+    """Create a subscription.
+
+    ENDPOINT the endpoint that will receive subscription notifications.
+    """
+
+    c = getClient()
+    subscription = c.create_subscription(endpoint)
+
+    print(subscription)
+
+@click.command()
+def subscriptions_get():
+    """Get a collection of subscriptions."""
+
+    c = getClient()
+    subscriptions = c.get_subscriptions()
+
+    print(subscriptions)
+
+@click.command()
+@click.argument("id")
+def subscription_delete(id):
+    """Delete a subscription.
+
+    ID of the subscription to be deleted.
+    """
+
+    c = getClient()
+    subscriptions = c.delete_subscription(id)
+
+    print("success")
 
 def getClient():
     API_BASE_URL = os.environ.get('CPS_API_BASE_URL', 'https://api-sandbox.circle.com')
@@ -192,6 +227,9 @@ def run():
     cli.add_command(transfer_get)
     cli.add_command(transfers_get)
     cli.add_command(configuration_get)
+    cli.add_command(subscription_create)
+    cli.add_command(subscriptions_get)
+    cli.add_command(subscription_delete)
 
     cli()
 

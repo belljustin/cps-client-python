@@ -7,6 +7,7 @@ import requests
 from .wallet import Wallet, Address, CreateWalletRequest, CreateAddressRequest
 from .transfer import Transfer
 from .configuration import Configuration
+from .subscription import Subscription, CreateSubscriptionRequest
 
 class HttpException(Exception):
     def __init__(self, status_code):
@@ -213,3 +214,35 @@ class Client:
         Client.__check_status_code(res)
 
         return Configuration.from_json(res.json()["data"])
+
+    """ subscriptions """
+
+    def create_subscription(self, endpoint):
+        req = CreateSubscriptionRequest(endpoint)
+        resource = "/".join([self.host, self.version, "notifications/subscriptions"])
+
+        res = requests.post(
+                resource,
+                data = json.dumps(req, default=lambda o: o.__dict__),
+                headers = self._default_headers())
+        Client.__check_status_code(res)
+
+        return Subscription.from_json(res.json()["data"])
+
+    def get_subscriptions(self):
+        resource = "/".join([self.host, self.version, "notifications/subscriptions"])
+
+        res = requests.get(
+                resource,
+                headers = self._default_headers())
+        Client.__check_status_code(res)
+
+        return [Subscription.from_json(s) for s in res.json()["data"]]
+
+    def delete_subscription(self, id):
+        resource = "/".join([self.host, self.version, "notifications/subscriptions", id])
+
+        res = requests.delete(
+                resource,
+                headers = self._default_headers())
+        Client.__check_status_code(res)

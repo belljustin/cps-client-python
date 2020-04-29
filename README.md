@@ -31,7 +31,10 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  configuration-get           Get global CPS configuration
+  configuration-get           Get global CPS configuration.
+  subscription-create         Create a subscription.
+  subscription-delete         Delete a subscription.
+  subscriptions-get           Get a collection of subscriptions.
   transfer-create-blockchain  Create transfers from a wallet to blockchain...
   transfer-create-wallet      Create transfers from a wallet to another...
   transfer-get                Get info about transfers.
