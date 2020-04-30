@@ -13,13 +13,17 @@ class Location:
             return WalletLocation.from_json(json_)
 
 class WalletLocation(Location):
-    def __init__(self, id):
+    def __init__(self, id, address=None):
         Location.__init__(self, "wallet")
         self.id = id
+        self.address = address
 
     @staticmethod
     def from_json(json_):
-        return WalletLocation(json_["id"])
+        address = None
+        if "address" in json_:
+            address = json_["address"]
+        return WalletLocation(json_["id"], address)
 
 class BlockchainLocation(Location):
     def __init__(self, address, chain):
