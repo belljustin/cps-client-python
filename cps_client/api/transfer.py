@@ -33,7 +33,10 @@ class BlockchainLocation(Location):
 
     @staticmethod
     def from_json(json_):
-        return BlockchainLocation(json_["address"], json_["chain"])
+        address = None
+        if "address" in json_:
+            address = json_["address"]
+        return BlockchainLocation(address, json_["chain"])
 
 class Money:
     def __init__(self, amount, currency):
